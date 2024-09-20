@@ -15,6 +15,8 @@ function Details({
   wName5,
   wName6
 }) {
+  let divid = weather3 && weather3?.visibility / 1000;
+
   return (
     <div className={`col-4 someClass`}>
       <div className="flex">
@@ -37,7 +39,7 @@ function Details({
             <h5>
               {weather?.wind && weather?.wind.speed}
               {weather2?.main && weather2?.main.temp}
-              {weather3 && weather3?.visibility}
+              {divid}
               {weather4?.coord && weather4?.coord.lat}
               {weather5?.coord && weather5?.coord.lon}
               {weather6?.main && weather6?.main.humidity}
