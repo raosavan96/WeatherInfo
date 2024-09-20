@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Weather.css";
 import SunImg from "./images/sun.png";
 import BroCimg from "./images/brokenc.png";
@@ -16,7 +16,9 @@ import Details from "./Details";
 import { useWeather } from "./WeatherContext"; // Use the custom hook
 
 function ContentSec() {
-  const [weatherData, setWeatherData] = useState("jaipur");
+  const [weatherData, setWeatherData] = useState("jaipur"); // Default city: Jaipur
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const { weather, setWeather } = useWeather(); // Access context using the custom hook
 
   const detailArray = {
@@ -36,70 +38,74 @@ function ContentSec() {
     km: " km"
   };
 
+  // Use environment variable for API key
   const apiKey = "340791651da63f0d2465805bede445b3";
+
+  useEffect(() => {
+    // Fetch weather data for Jaipur on initial render
+    handleCities();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array ensures it runs once when the component mounts
+
+  useEffect(() => {
+    if (weatherData !== "jaipur") {
+      // Fetch weather data when the user changes the input
+      handleCities();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [weatherData]); // Call handleCities when weatherData changes, except for initial render with default
 
   function handleCities() {
     if (weatherData) {
+      setLoading(true);
       fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${`${weatherData}`}&appid=${apiKey}&units=metric`
+        `https://api.openweathermap.org/data/2.5/weather?q=${weatherData}&appid=${apiKey}&units=metric`
       )
         .then((res) => res.json())
         .then((data) => {
           setWeather(data);
-          console.log(data);
+          setError(null); // Clear any previous error
+          setLoading(false);
         })
         .catch((error) => {
+          setError("Failed to fetch weather data.");
           console.error(error);
+          setLoading(false);
         });
     }
   }
 
-  let weatherImg;
-  if (weather.weather && weather.weather[0].icon == "01d") {
-    weatherImg = SunImg;
-  } else if (weather.weather && weather.weather[0].icon == "01n") {
-    weatherImg = MoonImg;
-  } else if (weather.weather && weather.weather[0].icon == "02d") {
-    weatherImg = DayCimg;
-  } else if (weather.weather && weather.weather[0].icon == "02n") {
-    weatherImg = Nicimg;
-  } else if (weather.weather && weather.weather[0].icon == "03d") {
-    weatherImg = ScCld;
-  } else if (weather.weather && weather.weather[0].icon == "03n") {
-    weatherImg = ScCld;
-  } else if (weather.weather && weather.weather[0].icon == "04d") {
-    weatherImg = BroCimg;
-  } else if (weather.weather && weather.weather[0].icon == "04n") {
-    weatherImg = BroCimg;
-  } else if (weather.weather && weather.weather[0].icon == "09d") {
-    weatherImg = ShowRain;
-  } else if (weather.weather && weather.weather[0].icon == "09n") {
-    weatherImg = ShowRain;
-  } else if (weather.weather && weather.weather[0].icon == "10d") {
-    weatherImg = DayRain;
-  } else if (weather.weather && weather.weather[0].icon == "10n") {
-    weatherImg = NiRain;
-  } else if (weather.weather && weather.weather[0].icon == "11d") {
-    weatherImg = ThonderS;
-  } else if (weather.weather && weather.weather[0].icon == "11n") {
-    weatherImg = ThonderS;
-  } else if (weather.weather && weather.weather[0].icon == "13d") {
-    weatherImg = SnowImg;
-  } else if (weather.weather && weather.weather[0].icon == "13n") {
-    weatherImg = SnowImg;
-  } else if (weather.weather && weather.weather[0].icon == "50d") {
-    weatherImg = MistImg;
-  } else if (weather.weather && weather.weather[0].icon == "50n") {
-    weatherImg = MistImg;
-  }
+  const iconMap = {
+    "01d": SunImg,
+    "01n": MoonImg,
+    "02d": DayCimg,
+    "02n": Nicimg,
+    "03d": ScCld,
+    "03n": ScCld,
+    "04d": BroCimg,
+    "04n": BroCimg,
+    "09d": ShowRain,
+    "09n": ShowRain,
+    "10d": DayRain,
+    "10n": NiRain,
+    "11d": ThonderS,
+    "11n": ThonderS,
+    "13d": SnowImg,
+    "13n": SnowImg,
+    "50d": MistImg,
+    "50n": MistImg
+  };
+
+  let weatherImg = weather.weather ? iconMap[weather.weather[0].icon] : null;
 
   return (
     <div className={`main_content_box h-full`}>
-      <div className={`input_sec  flex items-center overflow-hidden`}>
+      <div className={`input_sec flex items-center overflow-hidden`}>
         <form
           className="flex w-full"
           onSubmit={(e) => {
             e.preventDefault();
+            handleCities(); // Call function on form submission
           }}
         >
           <input
@@ -117,6 +123,7 @@ function ContentSec() {
           </button>
         </form>
       </div>
+      {error && <p className="error-message">{error}</p>}
       <div className={`city_sun_moon px-10`}>
         <div className="row">
           <div className={`city_temp col-6`}>
@@ -128,13 +135,16 @@ function ContentSec() {
             </p>
             <div>
               <h1 className={`text-6xl font-bold mt-5 temp_hed`}>
-                {weather.main?.temp || "0"}
-                &deg;c
+                {weather.main?.temp || "0"}&deg;c
               </h1>
             </div>
           </div>
           <div className={`moon_sun col-6 flex items-center justify-center`}>
-            <img src={weatherImg} alt="weather-icon" />
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <img src={weatherImg} alt="weather-icon" />
+            )}
           </div>
         </div>
       </div>
