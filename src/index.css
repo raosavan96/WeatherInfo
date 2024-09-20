@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hide the default checkbox */
+.toggle-checkbox {
+  display: none;
+}
+
+/* The toggle button's background */
+.toggle-label {
+  width: 30px;
+  height: 15px;
+  background-color: var(--btnbg);
+  margin-top: 6px;
+  border-radius: 50px;
+  position: relative;
+  cursor: pointer;
+  box-shadow: var(--boxshd);
+  transition: background-color 0.4s ease;
+}
+
+/* The circle inside the toggle */
+.toggle-circle {
+  width: 13px;
+  height: 13px;
+  background-color: var(--mbtn);
+  border-radius: 50%;
+  position: absolute;
+  top: 0.5px;
+  left: 1.5px;
+  transition: transform 0.4s ease;
+}
+
+/* When the checkbox is checked (toggle is on) */
+.toggle-checkbox:checked + .toggle-label {
+  background-color: #0b131e;
+}
+
+/* Move the circle to the right when the toggle is on */
+.toggle-checkbox:checked + .toggle-label .toggle-circle {
+  transform: translateX(13px);
+}
+
+@media screen and (max-width: 600px) {
+  /* Container to center the toggle button */
+
+  /* Hide the default checkbox */
+  .toggle-checkbox {
+    display: none;
+  }
+
+  /* The toggle button's background */
+  .toggle-label {
+    width: 30px;
+    height: 15px;
+
+    margin-top: 6px;
+    border-radius: 50px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.4s ease;
+  }
+
+  /* The circle inside the toggle */
+  .toggle-circle {
+    width: 13px;
+    height: 13px;
+
+    border-radius: 50%;
+    position: absolute;
+    top: 1.5px;
+    left: 1.5px;
+    transition: transform 0.4s ease;
+  }
+
+  /* When the checkbox is checked (toggle is on) */
+  .toggle-checkbox:checked + .toggle-label {
+  }
+
+  /* Move the circle to the right when the toggle is on */
+  .toggle-checkbox:checked + .toggle-label .toggle-circle {
+    transform: translateX(13px);
+  }
+}
