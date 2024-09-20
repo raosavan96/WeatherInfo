@@ -202,12 +202,13 @@ img {
   }
 
   .aside_sec {
-    margin-top: 50px !important;
+    margin-top: 20px !important;
     border-radius: 15px;
   }
 
   .weather_box {
     padding: 15px;
+    height: 100%;
   }
   .main_content_box {
     width: 100%;
