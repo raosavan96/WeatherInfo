@@ -33,7 +33,8 @@ function ContentSec() {
     icon5: "fa-solid fa-cloud-meatball",
     speed: " m/sec",
     temp: " c",
-    km: " km"
+    km: " km",
+    prs: "%"
   };
 
   const apiKey = "340791651da63f0d2465805bede445b3";
@@ -41,7 +42,7 @@ function ContentSec() {
   function handleCities() {
     if (weatherData) {
       fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${`${weatherData}`}&appid=${apiKey}&units=metric`
+        `https://api.openweathermap.org/data/2.5/weather?q=${weatherData}&appid=${apiKey}&units=metric`
       )
         .then((res) => res.json())
         .then((data) => {

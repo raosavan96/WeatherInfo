@@ -46,6 +46,7 @@ function Details({
               {wName1?.speed}
               {wName2?.temp}
               {wName3?.km}
+              {wName6?.prs}
             </h5>
           </div>
         </div>
